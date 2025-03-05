@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Prioritization Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h2 class="text-xl font-bold mb-4">Task Prioritization Calculator</h2>
+
+        <label>Current Hours:</label>
+        <input type="number" id="hours_current" class="border p-2 w-full mb-2" value="10">
+
+        <label>Automated Hours:</label>
+        <input type="number" id="hours_automated" class="border p-2 w-full mb-2" value="5">
+
+        <label>Feasibility (0-30):</label>
+        <input type="range" id="feasibility" min="0" max="30" class="w-full mb-2" value="15">
+        <span id="feasibility_value">15</span>
+
+        <label>Business Impact (1-5):</label>
+        <select id="impact" class="border p-2 w-full mb-2">
+            <option value="1">1 - Very Low</option>
+            <option value="2">2 - Low</option>
+            <option value="3" selected>3 - Medium</option>
+            <option value="4">4 - High</option>
+            <option value="5">5 - Critical</option>
+        </select>
+
+        <label>Urgency (1-5):</label>
+        <select id="urgency" class="border p-2 w-full mb-2">
+            <option value="1">1 - No urgency</option>
+            <option value="2">2 - Low</option>
+            <option value="3" selected>3 - Moderate</option>
+            <option value="4">4 - High</option>
+            <option value="5">5 - Critical</option>
+        </select>
+
+        <button onclick="calculateScore()" class="bg-blue-500 text-white p-2 w-full mt-4 rounded">Calculate</button>
+
+        <h3 class="text-lg font-bold mt-4">Total Score: <span id="total_score">0</span>/100</h3>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const data = {
+                hours_current: document.getElementById("hours_current").value,
+                hours_automated: document.getElementById("hours_automated").value,
+                feasibility: document.getElementById("feasibility").value,
+                impact: document.getElementById("impact").value,
+                urgency: document.getElementById("urgency").value
+            };
+
+            fetch("/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("total_score").innerText = result.total_score;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        document.getElementById("feasibility").addEventListener("input", function() {
+            document.getElementById("feasibility_value").innerText = this.value;
+        });
+    </script>
+</body>
+</html>
