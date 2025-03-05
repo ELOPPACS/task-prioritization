@@ -8,39 +8,47 @@
 </head>
 <body class="bg-gray-100 flex justify-center items-center h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 class="text-xl font-bold mb-4">Task Prioritization Calculator</h2>
+        <h2 class="text-xl font-bold mb-4">🚀 Task Prioritization Calculator</h2>
 
-        <label>Current Hours:</label>
+        <label>⏳ Current Hours (How long does this task take now?):</label>
         <input type="number" id="hours_current" class="border p-2 w-full mb-2" value="10">
 
-        <label>Automated Hours:</label>
+        <label>🤖 Automated Hours (How long if automated?):</label>
         <input type="number" id="hours_automated" class="border p-2 w-full mb-2" value="5">
 
-        <label>Feasibility (0-30):</label>
-        <input type="range" id="feasibility" min="0" max="30" class="w-full mb-2" value="15">
-        <span id="feasibility_value">15</span>
-
-        <label>Business Impact (1-5):</label>
-        <select id="impact" class="border p-2 w-full mb-2">
-            <option value="1">1 - Very Low</option>
-            <option value="2">2 - Low</option>
-            <option value="3" selected>3 - Medium</option>
-            <option value="4">4 - High</option>
-            <option value="5">5 - Critical</option>
+        <label>✅ Feasibility (0-30):</label>
+        <select id="feasibility" class="border p-2 w-full mb-2">
+            <option value="0">0 - Impossible to automate</option>
+            <option value="10">10 - Very hard but possible</option>
+            <option value="20">20 - Moderate effort, manageable</option>
+            <option value="30" selected>30 - Very easy, minimal effort</option>
         </select>
 
-        <label>Urgency (1-5):</label>
+        <label>📈 Business Impact (1-5):</label>
+        <select id="impact" class="border p-2 w-full mb-2">
+            <option value="1">1 - Very low (Not important)</option>
+            <option value="2">2 - Low (Useful but not critical)</option>
+            <option value="3" selected>3 - Medium (Beneficial but not urgent)</option>
+            <option value="4">4 - High (Significant for efficiency)</option>
+            <option value="5">5 - Critical (Business cannot function well without it)</option>
+        </select>
+
+        <label>🔥 Urgency (1-5):</label>
         <select id="urgency" class="border p-2 w-full mb-2">
-            <option value="1">1 - No urgency</option>
-            <option value="2">2 - Low</option>
-            <option value="3" selected>3 - Moderate</option>
-            <option value="4">4 - High</option>
-            <option value="5">5 - Critical</option>
+            <option value="1">1 - No urgency (Can wait indefinitely)</option>
+            <option value="2">2 - Low urgency (Not needed soon)</option>
+            <option value="3" selected>3 - Moderate urgency (Needed soon but not critical)</option>
+            <option value="4">4 - High urgency (Should be done quickly)</option>
+            <option value="5">5 - Critical (Must be done immediately)</option>
         </select>
 
         <button onclick="calculateScore()" class="bg-blue-500 text-white p-2 w-full mt-4 rounded">Calculate</button>
 
-        <h3 class="text-lg font-bold mt-4">Total Score: <span id="total_score">0</span>/100</h3>
+        <h3 class="text-lg font-bold mt-4">🎯 Results:</h3>
+        <p>ROI Score: <span id="roi_score">0</span>/30</p>
+        <p>Feasibility Score: <span id="feasibility_score">0</span>/30</p>
+        <p>Business Impact Score: <span id="business_impact_score">0</span>/40</p>
+        <h3 class="text-lg font-bold mt-2">🔥 Total Score: <span id="total_score">0</span>/100</h3>
     </div>
 
     <script>
@@ -60,14 +68,13 @@
             })
             .then(response => response.json())
             .then(result => {
+                document.getElementById("roi_score").innerText = result.roi_score;
+                document.getElementById("feasibility_score").innerText = result.feasibility_score;
+                document.getElementById("business_impact_score").innerText = result.business_impact_score;
                 document.getElementById("total_score").innerText = result.total_score;
             })
             .catch(error => console.error("Error:", error));
         }
-
-        document.getElementById("feasibility").addEventListener("input", function() {
-            document.getElementById("feasibility_value").innerText = this.value;
-        });
     </script>
 </body>
 </html>
