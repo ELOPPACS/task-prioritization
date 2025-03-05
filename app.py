@@ -7,13 +7,13 @@ def calculate_roi(hours_current, hours_automated):
     savings = 1 - (hours_automated / hours_current)
     return max(0, savings * 30)  # Scale to 30 points
 
-def calculate_feasibility(feasibility_score):
-    """Feasibility score is directly given by the user (0-30)."""
-    return feasibility_score  # Max 30 points
+def calculate_feasibility(tools, experience, human_intervention):
+    """Feasibility is calculated based on three user inputs (0-30)."""
+    return tools + experience + human_intervention  # Each ranges 0-10, max total 30
 
 def calculate_business_impact(impact, urgency):
-    """Calculate the Business Impact score based on importance and urgency."""
-    return ((impact + urgency) / 2) * 8  # Scale to 40 points
+    """Calculate Business Impact score (scaled to 40 points)."""
+    return ((impact + urgency) / 2) * 8
 
 @app.route("/")
 def home():
@@ -24,12 +24,16 @@ def calculate():
     data = request.json
     hours_current = float(data["hours_current"])
     hours_automated = float(data["hours_automated"])
-    feasibility = float(data["feasibility"])
+
+    tools = int(data["tools"])
+    experience = int(data["experience"])
+    human_intervention = int(data["human_intervention"])
+
     impact = float(data["impact"])
     urgency = float(data["urgency"])
 
     roi_score = calculate_roi(hours_current, hours_automated)
-    feasibility_score = calculate_feasibility(feasibility)
+    feasibility_score = calculate_feasibility(tools, experience, human_intervention)
     business_impact_score = calculate_business_impact(impact, urgency)
 
     total_score = roi_score + feasibility_score + business_impact_score
