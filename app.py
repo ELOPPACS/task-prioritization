@@ -7,9 +7,13 @@ def calculate_roi(hours_current, hours_automated):
     savings = 1 - (hours_automated / hours_current)
     return max(0, savings * 30)  # Scale to 30 points
 
+def calculate_feasibility(feasibility_score):
+    """Feasibility score is directly given by the user (0-30)."""
+    return feasibility_score  # Max 30 points
+
 def calculate_business_impact(impact, urgency):
-    """Calculate Business Impact score (scaled to 40 points)."""
-    return ((impact + urgency) / 2) * 8
+    """Calculate the Business Impact score based on importance and urgency."""
+    return ((impact + urgency) / 2) * 8  # Scale to 40 points
 
 @app.route("/")
 def home():
@@ -25,11 +29,17 @@ def calculate():
     urgency = float(data["urgency"])
 
     roi_score = calculate_roi(hours_current, hours_automated)
+    feasibility_score = calculate_feasibility(feasibility)
     business_impact_score = calculate_business_impact(impact, urgency)
 
-    total_score = roi_score + feasibility + business_impact_score
+    total_score = roi_score + feasibility_score + business_impact_score
 
-    return jsonify({"total_score": round(total_score, 2)})
+    return jsonify({
+        "roi_score": round(roi_score, 2),
+        "feasibility_score": round(feasibility_score, 2),
+        "business_impact_score": round(business_impact_score, 2),
+        "total_score": round(total_score, 2)
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
