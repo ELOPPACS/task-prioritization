@@ -21,10 +21,10 @@
         <div class="mb-6 p-4 border border-blue-300 rounded-lg">
             <h3 class="text-lg font-semibold text-blue-600">💰 Return on Investment (ROI)</h3>
             <label>⏳ Current Hours:</label>
-            <input type="number" id="hours_current" class="border p-2 w-full mb-2" value="10">
+            <input type="number" id="hours_current" class="border p-2 w-full mb-2" placeholder="Enter hours">
 
             <label>🤖 Automated Hours:</label>
-            <input type="number" id="hours_automated" class="border p-2 w-full mb-2" value="5">
+            <input type="number" id="hours_automated" class="border p-2 w-full mb-2" placeholder="Enter hours">
         </div>
 
         <!-- Feasibility Section -->
@@ -33,20 +33,23 @@
 
             <label>🔧 Are there automation tools available?</label>
             <select id="tools" class="border p-2 w-full mb-2">
-                <option value="10">Yes (10 points)</option>
-                <option value="5">Partially (5 points)</option>
-                <option value="0">No (0 points)</option>
+                <option value="" disabled selected>Select an option</option>
+                <option value="10">Yes</option>
+                <option value="5">Partially</option>
+                <option value="0">No </option>
             </select>
 
             <label>👨‍💻 Does the team have experience in this type of automation?</label>
             <select id="experience" class="border p-2 w-full mb-2">
-                <option value="10">Yes (10 points)</option>
-                <option value="5">Partially (5 points)</option>
-                <option value="0">No (0 points)</option>
+                <option value="" disabled selected>Select an option</option>
+                <option value="10">Yes</option>
+                <option value="5">Partially</option>
+                <option value="0">No</option>
             </select>
 
             <label>🧑‍⚖️ Will human intervention still be critical?</label>
             <select id="human_intervention" class="border p-2 w-full mb-2">
+                <option value="" disabled selected>Select an option</option>
                 <option value="10">No</option>
                 <option value="5">Yes, but reducible</option>
                 <option value="0">Yes, essential</option>
@@ -59,18 +62,20 @@
 
             <label>⚡ Business Impact Level:</label>
             <select id="impact" class="border p-2 w-full mb-2">
+                <option value="" disabled selected>Select an option</option>
                 <option value="1">1 - Very Low</option>
                 <option value="2">2 - Low</option>
-                <option value="3" selected>3 - Medium</option>
+                <option value="3">3 - Medium</option>
                 <option value="4">4 - High</option>
                 <option value="5">5 - Critical</option>
             </select>
 
             <label>🔥 Urgency Level:</label>
             <select id="urgency" class="border p-2 w-full mb-2">
+                <option value="" disabled selected>Select an option</option>
                 <option value="1">1 - No urgency</option>
                 <option value="2">2 - Low</option>
-                <option value="3" selected>3 - Moderate</option>
+                <option value="3">3 - Moderate</option>
                 <option value="4">4 - High</option>
                 <option value="5">5 - Critical</option>
             </select>
@@ -79,22 +84,36 @@
         <button onclick="calculateScore()" class="bg-blue-500 text-white p-2 w-full mt-4 rounded">Calculate</button>
 
         <h3 class="text-lg font-bold mt-4">🎯 Results:</h3>
-        <p>ROI Score: <span id="roi_score">0</span>/30</p>
-        <p>Feasibility Score: <span id="feasibility_score">0</span>/30</p>
-        <p>Business Impact Score: <span id="business_impact_score">0</span>/40</p>
-        <h3 class="text-lg font-bold mt-2">🔥 Total Score: <span id="total_score">0</span>/100</h3>
+        <p>ROI Score: <span id="roi_score">-</span>/30</p>
+        <p>Feasibility Score: <span id="feasibility_score">-</span>/30</p>
+        <p>Business Impact Score: <span id="business_impact_score">-</span>/40</p>
+        <h3 class="text-lg font-bold mt-2">🔥 Total Score: <span id="total_score">-</span>/100</h3>
     </div>
 
     <script>
         function calculateScore() {
+            const hours_current = document.getElementById("hours_current").value;
+            const hours_automated = document.getElementById("hours_automated").value;
+            const tools = document.getElementById("tools").value;
+            const experience = document.getElementById("experience").value;
+            const human_intervention = document.getElementById("human_intervention").value;
+            const impact = document.getElementById("impact").value;
+            const urgency = document.getElementById("urgency").value;
+
+            // Ensure all fields are filled before calculating
+            if (!hours_current || !hours_automated || !tools || !experience || !human_intervention || !impact || !urgency) {
+                alert("⚠️ Please complete all fields before calculating!");
+                return;
+            }
+
             const data = {
-                hours_current: document.getElementById("hours_current").value,
-                hours_automated: document.getElementById("hours_automated").value,
-                tools: document.getElementById("tools").value,
-                experience: document.getElementById("experience").value,
-                human_intervention: document.getElementById("human_intervention").value,
-                impact: document.getElementById("impact").value,
-                urgency: document.getElementById("urgency").value
+                hours_current,
+                hours_automated,
+                tools,
+                experience,
+                human_intervention,
+                impact,
+                urgency
             };
 
             fetch("/calculate", {
