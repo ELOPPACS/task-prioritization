@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -45,5 +46,11 @@ def calculate():
         "total_score": round(total_score, 2)
     })
 
+# 🔹 Keep-Alive Route for UptimeRobot
+@app.route("/keep-alive")
+def keep_alive():
+    return "I'm alive!", 200
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render assigns a dynamic port
+    app.run(debug=True, host="0.0.0.0", port=port)
